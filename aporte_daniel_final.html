@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plano de Aporte — Daniel Rodrigues</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#05091A;--navy2:#0A1128;--card:#0D1630;--card2:#101E38;--line:#192640;
+  --gold:#C8A84B;--gold-lt:#E0C87A;--gold-dim:rgba(200,168,75,.11);
+  --teal:#28BDBD;--teal-dim:rgba(40,189,189,.09);
+  --green:#3EC99A;--grn-dim:rgba(62,201,154,.09);
+  --purple:#9B7DE8;--prp-dim:rgba(155,125,232,.09);
+  --red:#E05555;--white:#F2EEE5;--muted:#6E80A0;--muted2:#3E5070;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--navy);color:var(--white);font-family:"DM Sans",sans-serif;font-weight:300;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");opacity:.022}
+
+/* ── PWD ── */
+#overlay{position:fixed;inset:0;z-index:9999;background:var(--navy);display:flex;align-items:center;justify-content:center}
+.pwd-box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:52px 48px 44px;width:100%;max-width:400px;text-align:center;box-shadow:0 40px 100px rgba(0,0,0,.7);animation:fadeUp .5s ease both}
+.pwd-logo{font-family:"Cormorant Garamond",serif;font-size:11px;letter-spacing:5px;color:var(--gold);text-transform:uppercase;margin-bottom:20px}
+.pwd-h{font-family:"Cormorant Garamond",serif;font-size:26px;font-weight:300;color:var(--white);margin-bottom:6px}
+.pwd-s{font-size:12px;color:var(--muted);margin-bottom:32px;font-weight:300}
+.pwd-in{width:100%;padding:13px 16px;background:var(--navy2);border:1px solid var(--line);border-radius:5px;color:var(--white);font-family:"DM Sans",sans-serif;font-size:14px;font-weight:300;outline:none;margin-bottom:8px;transition:border-color .2s;letter-spacing:2px}
+.pwd-in:focus{border-color:var(--gold)}.pwd-in::placeholder{letter-spacing:0;color:var(--muted2)}
+.pwd-err{font-size:11px;color:var(--red);height:16px;margin-bottom:12px}
+.pwd-btn{width:100%;padding:13px;background:var(--gold);border:none;border-radius:5px;color:var(--navy);font-family:"DM Sans",sans-serif;font-size:11px;font-weight:500;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:background .2s,transform .15s}
+.pwd-btn:hover{background:var(--gold-lt);transform:translateY(-1px)}
+.pwd-foot{margin-top:28px;font-size:10px;color:rgba(110,128,160,.5);font-weight:300}
+
+/* ── LAYOUT ── */
+.wrap{position:relative;z-index:1;max-width:820px;margin:0 auto;padding:60px 44px 96px}
+
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding-bottom:32px;border-bottom:1px solid var(--line);margin-bottom:48px;opacity:0;animation:fadeUp .5s .02s ease forwards}
+.brand-tag{font-family:"Cormorant Garamond",serif;font-size:11px;letter-spacing:4px;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:3px}
+.brand-sub{font-size:11px;color:var(--muted);font-weight:300}
+.doc-chip{display:inline-block;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);background:var(--gold-dim);border:1px solid rgba(200,168,75,.2);padding:4px 10px;border-radius:2px;margin-bottom:6px}
+.doc-date{font-size:11px;color:var(--muted);text-align:right;font-weight:300}
+
+/* ── HERO ── */
+.hero{margin-bottom:40px;opacity:0;animation:fadeUp .5s .08s ease forwards}
+.eye{font-size:10px;letter-spacing:3.5px;text-transform:uppercase;color:var(--teal);font-weight:400;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.eye::before{content:"";display:inline-block;width:22px;height:1px;background:var(--teal)}
+.h1{font-family:"Cormorant Garamond",serif;font-size:48px;font-weight:300;line-height:1.05;color:var(--white);margin-bottom:12px}
+.h1 em{font-style:italic;color:var(--gold-lt)}
+.sub{font-size:13px;color:var(--muted);font-weight:300;line-height:1.75;max-width:540px}
+
+/* ── KPI 3col ── */
+.kpi3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-bottom:36px;opacity:0;animation:fadeUp .5s .14s ease forwards}
+.kpi{background:var(--card);padding:18px 16px;display:flex;flex-direction:column;gap:4px}
+.kpi-lbl{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);font-weight:400}
+.kpi-val{font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:500;line-height:1;color:var(--white)}
+.kpi-val.g{color:var(--gold)}.kpi-val.t{color:var(--teal)}
+.kpi-note{font-size:10px;color:var(--muted2);font-weight:300}
+
+/* ── AVISO PREÇO ── */
+.aviso{background:rgba(200,168,75,.06);border:1px solid rgba(200,168,75,.18);border-left:3px solid var(--gold);border-radius:5px;padding:14px 18px;margin-bottom:36px;font-size:12px;color:#B8C8D8;line-height:1.7;opacity:0;animation:fadeUp .5s .18s ease forwards}
+
+/* ── ASSET CARD ── */
+.asset-card{background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:14px;opacity:0;animation:fadeUp .5s ease forwards}
+.asset-card:nth-child(1){animation-delay:.24s}
+.asset-card:nth-child(2){animation-delay:.30s}
+.asset-card:nth-child(3){animation-delay:.36s}
+
+/* HEADER (sempre visível, clicável) */
+.card-header{display:flex;align-items:center;gap:0;cursor:pointer;transition:background .2s;user-select:none}
+.card-header:hover{background:var(--card2)}
+.card-accent{width:4px;align-self:stretch;flex-shrink:0}
+.ac-teal{background:var(--teal)}
+.ac-green{background:var(--green)}
+.ac-purple{background:var(--purple)}
+.card-header-inner{flex:1;display:flex;align-items:center;justify-content:space-between;padding:22px 24px}
+.card-left{}
+.card-badge{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:400}
+.card-ticker{font-family:"Cormorant Garamond",serif;font-size:28px;font-weight:500;color:var(--white);line-height:1;margin-bottom:3px}
+.card-name{font-size:11px;color:var(--muted);font-weight:300}
+.card-right{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.card-amount-lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.card-amount{font-family:"Cormorant Garamond",serif;font-size:32px;font-weight:500;line-height:1}
+.card-amount.g{color:var(--gold)}.card-amount.t{color:var(--teal)}.card-amount.p{color:var(--purple)}
+.card-action-tag{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:2px;font-weight:500}
+.tag-t{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(40,189,189,.2)}
+.tag-g{background:var(--grn-dim);color:var(--green);border:1px solid rgba(62,201,154,.2)}
+.tag-p{background:var(--prp-dim);color:var(--purple);border:1px solid rgba(155,125,232,.2)}
+.chevron{margin-left:16px;font-size:14px;color:var(--muted);transition:transform .3s ease;flex-shrink:0}
+.card-header.open .chevron{transform:rotate(180deg)}
+
+/* BODY (expand/collapse) */
+.card-body{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1)}
+.card-body.open{max-height:600px}
+.card-body-inner{border-top:1px solid var(--line);padding:22px 24px 24px}
+
+/* grid de detalhes */
+.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:5px;overflow:hidden;margin-bottom:18px}
+.detail-cell{background:var(--card2);padding:14px 16px;display:flex;flex-direction:column;gap:5px}
+.dc-lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted2);font-weight:400}
+.dc-val{font-size:14px;font-weight:400;color:var(--white)}
+.dc-val.highlight{color:var(--gold);font-family:"Cormorant Garamond",serif;font-size:20px;font-weight:500}
+.dc-val.ok{color:var(--green);font-size:12px}
+.dc-note{font-size:10px;color:var(--muted2)}
+
+/* descrição */
+.card-desc{font-size:12.5px;color:var(--muted);line-height:1.7;font-weight:300}
+.card-desc strong{color:var(--white);font-weight:400}
+
+/* barra de progresso */
+.prog-wrap{margin-top:16px}
+.prog-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:6px}
+.prog-track{height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;border-radius:2px;transition:width 1.4s cubic-bezier(.4,0,.2,1);width:0}
+
+/* ── CHECKLIST ── */
+.chklist{background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:36px;opacity:0;animation:fadeUp .5s .44s ease forwards}
+.chk-hd{padding:12px 20px;border-bottom:1px solid var(--line);font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);font-weight:400;display:flex;justify-content:space-between;align-items:center}
+.chk-progress{font-size:10px;color:var(--teal);font-weight:400;letter-spacing:0}
+.chk-i{display:flex;align-items:flex-start;gap:14px;padding:13px 20px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .15s;user-select:none}
+.chk-i:last-child{border-bottom:none}
+.chk-i:hover{background:var(--card2)}
+.chk-i.done .chk-b{background:var(--gold);border-color:var(--gold)}
+.chk-i.done .chk-b::after{opacity:1}
+.chk-i.done .chk-t{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--muted2)}
+.chk-b{width:18px;height:18px;border:1px solid var(--line);border-radius:3px;flex-shrink:0;margin-top:2px;position:relative;transition:all .15s;background:var(--navy2)}
+.chk-b::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--navy);font-weight:700;opacity:0;transition:opacity .15s}
+.chk-t{font-size:12.5px;color:var(--white);line-height:1.6;font-weight:300}
+.chk-t strong{color:var(--gold-lt);font-weight:400}
+
+/* ── TOTAL ── */
+.total-blk{background:linear-gradient(135deg,rgba(200,168,75,.07),rgba(40,189,189,.04));border:1px solid rgba(200,168,75,.18);border-radius:8px;padding:26px 30px;display:flex;align-items:center;justify-content:space-between;margin-bottom:36px;opacity:0;animation:fadeUp .5s .5s ease forwards}
+.tl-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.tl-val{font-family:"Cormorant Garamond",serif;font-size:40px;font-weight:300;color:var(--gold);line-height:1}
+.tr-col{display:flex;flex-direction:column;gap:7px}
+.trl{display:flex;align-items:baseline;gap:16px;justify-content:flex-end}
+.trll{font-size:11px;color:var(--muted)}
+.trlv{font-family:"Cormorant Garamond",serif;font-size:14px;font-weight:500;color:var(--white);min-width:90px;text-align:right}
+.tdiv{height:1px;background:var(--line)}
+.trlv.g{color:var(--gold)}.trll.g{color:var(--gold)}
+
+/* ── ALOCAÇÃO PÓS ── */
+.alloc{margin-bottom:36px;opacity:0;animation:fadeUp .5s .56s ease forwards}
+.alloc-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.alloc-lbl{font-size:11px;color:var(--white);width:160px;flex-shrink:0}
+.alloc-track{flex:1;height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.alloc-fill{height:100%;border-radius:2px;transition:width 1.4s cubic-bezier(.4,0,.2,1);width:0}
+.alloc-pct{font-size:10px;width:110px;text-align:right;flex-shrink:0}
+.alloc-pct .a{color:var(--gold)}.alloc-pct .m{color:var(--muted)}
+
+/* ── FOOTER ── */
+.footer{border-top:1px solid var(--line);padding-top:28px;display:flex;align-items:flex-end;justify-content:space-between;opacity:0;animation:fadeUp .5s .62s ease forwards}
+.sig-n{font-family:"Cormorant Garamond",serif;font-size:19px;font-weight:500;color:var(--white);margin-bottom:3px}
+.sig-r{font-size:11px;color:var(--muted);font-weight:300;margin-bottom:2px}
+.sig-c{font-size:10px;color:var(--gold);letter-spacing:1px}
+.disc{max-width:300px;text-align:right;font-size:9.5px;color:rgba(110,128,160,.4);line-height:1.65;font-weight:300}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:600px){
+  .wrap{padding:36px 18px 60px}.h1{font-size:36px}
+  .kpi3{grid-template-columns:1fr 1fr}
+  .card-header-inner{flex-direction:column;align-items:flex-start;gap:12px}
+  .card-right{align-items:flex-start;text-align:left}
+  .detail-grid{grid-template-columns:1fr 1fr}
+  .total-blk{flex-direction:column;gap:20px}
+  .footer{flex-direction:column;gap:16px}.disc{text-align:left}
+}
+</style>
+</head>
+<body>
+
+<!-- PWD -->
+<div id="overlay">
+  <div class="pwd-box">
+    <div class="pwd-logo">MM &middot; Gr&atilde;o</div>
+    <div class="pwd-h">&Aacute;rea do Cliente</div>
+    <div class="pwd-s">Documento restrito &middot; Acesso autorizado</div>
+    <input id="pwd-in" class="pwd-in" type="password" placeholder="Digite sua senha"
+      onkeydown="if(event.key==='Enter')chk()"
+      onfocus="this.style.borderColor='#C8A84B'"
+      onblur="this.style.borderColor='#192640'"/>
+    <div id="pwd-err" class="pwd-err"></div>
+    <button class="pwd-btn" onclick="chk()">Acessar</button>
+    <div class="pwd-foot">Matheus Melo &middot; Planejador Financeiro Pessoal</div>
+  </div>
+</div>
+<script>
+function chk(){
+  if(document.getElementById('pwd-in').value==='daniel2026'){
+    document.getElementById('overlay').style.display='none';
+    startAnim();
+  }else{
+    var e=document.getElementById('pwd-err');
+    e.textContent='Senha incorreta. Tente novamente.';
+    document.getElementById('pwd-in').value='';
+    document.getElementById('pwd-in').focus();
+    setTimeout(()=>e.textContent='',3000);
+  }
+}
+</script>
+
+<div class="wrap">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div>
+      <span class="brand-tag">MM &middot; Gr&atilde;o</span>
+      <span class="brand-sub">Planejamento Financeiro Pessoal</span>
+    </div>
+    <div>
+      <div class="doc-chip">Plano de Aporte &middot; Junho 2026</div>
+      <div class="doc-date" id="doc-date"></div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="eye">Daniel Rodrigues &middot; Aporte do m&ecirc;s</div>
+    <h1 class="h1">O que comprar<br>com os <em>R$&nbsp;5.000</em></h1>
+    <p class="sub">Preparei aqui tudo que voc&ecirc; precisa para executar o aporte deste m&ecirc;s. Clique em cada ativo para ver os detalhes e marque conforme for comprando.</p>
+  </div>
+
+  <!-- KPI -->
+  <div class="kpi3">
+    <div class="kpi">
+      <span class="kpi-lbl">Valor do aporte</span>
+      <span class="kpi-val g">R$ 5.000,00</span>
+      <span class="kpi-note">3 ativos</span>
+    </div>
+    <div class="kpi">
+      <span class="kpi-lbl">Total executado</span>
+      <span class="kpi-val t">R$ 4.999,99</span>
+      <span class="kpi-note">Sobra de R$ 0,01</span>
+    </div>
+    <div class="kpi">
+      <span class="kpi-lbl">Data base</span>
+      <span class="kpi-val">Jun 2026</span>
+      <span class="kpi-note">Confirme os pre&ccedil;os antes de comprar</span>
+    </div>
+  </div>
+
+  <!-- AVISO -->
+  <div class="aviso">
+    ⚠️ Os pre&ccedil;os indicados s&atilde;o de refer&ecirc;ncia. Antes de executar, confira o pre&ccedil;o atual no seu Home Broker e respeite o <strong>pre&ccedil;o m&aacute;ximo de compra</strong> indicado em cada ativo.
+  </div>
+
+  <!-- ══ CARDS ══ -->
+  <div id="cards">
+
+    <!-- CARD 1: CDB Daycoval/BMG -->
+    <div class="asset-card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-accent ac-teal"></div>
+        <div class="card-header-inner">
+          <div class="card-left">
+            <div class="card-badge">01 &middot; Renda Fixa &middot; Liquidez di&aacute;ria</div>
+            <div class="card-ticker">CDB Daycoval<br>ou BMG</div>
+            <div class="card-name">Certificado de Dep&oacute;sito Banc&aacute;rio &middot; P&oacute;s-fixado</div>
+          </div>
+          <div class="card-right">
+            <span class="card-amount-lbl">Aplicar</span>
+            <span class="card-amount t">R$&nbsp;4.829,32</span>
+            <span class="card-action-tag tag-t">Maior volume</span>
+            <span class="chevron">&#9660;</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="detail-grid">
+            <div class="detail-cell">
+              <span class="dc-lbl">Valor a aplicar</span>
+              <span class="dc-val highlight">R$ 4.829,32</span>
+              <span class="dc-note">Valor exato</span>
+            </div>
+            <div class="detail-cell">
+              <span class="dc-lbl">Taxa m&iacute;nima</span>
+              <span class="dc-val ok">&#10003; 104% CDI (Daycoval)<br>&#10003; 107% CDI (BMG)</span>
+            </div>
+            <div class="detail-cell">
+              <span class="dc-lbl">Onde aplicar</span>
+              <span class="dc-val" style="font-size:12px">Daycoval Digital<br>ou BMG Digital</span>
+            </div>
+          </div>
+          <p class="card-desc">
+            Esta &eacute; a sua reserva estrat&eacute;gica de liquidez — o dinheiro que fica dispon&iacute;vel para oportunidades. Escolha o Daycoval (104% do CDI) ou o BMG (107% do CDI), ambos com <strong>resgate no mesmo dia</strong>. Aplique o valor exato indicado acima.
+          </p>
+          <div class="prog-wrap">
+            <div class="prog-labels"><span>Posi&ccedil;&atilde;o atual: R$ 5.219</span><span>Objetivo: R$ 12.899</span></div>
+            <div class="prog-track"><div class="prog-fill" style="background:var(--teal)" data-w="78.5"></div></div>
+            <div class="prog-labels" style="margin-top:5px"><span style="color:var(--teal)">P&oacute;s-aporte: R$ 10.048</span><span style="color:var(--muted)">78% do objetivo</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 2: CPTS11 -->
+    <div class="asset-card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-accent ac-green"></div>
+        <div class="card-header-inner">
+          <div class="card-left">
+            <div class="card-badge">02 &middot; Real Estate &middot; FII CRI</div>
+            <div class="card-ticker">CPTS11</div>
+            <div class="card-name">Capit&acirc;nia Securities II &middot; FII CRI Diversificado</div>
+          </div>
+          <div class="card-right">
+            <span class="card-amount-lbl">Comprar</span>
+            <span class="card-amount g">3&nbsp;cotas</span>
+            <span class="card-action-tag tag-g">≈ R$ 22,74</span>
+            <span class="chevron">&#9660;</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="detail-grid">
+            <div class="detail-cell">
+              <span class="dc-lbl">Cotas a comprar</span>
+              <span class="dc-val highlight">3 cotas</span>
+              <span class="dc-note">Total ≈ R$ 22,74</span>
+            </div>
+            <div class="detail-cell">
+              <span class="dc-lbl">Pre&ccedil;o ref. &middot; m&aacute;ximo</span>
+              <span class="dc-val" style="font-size:13px">Ref: R$ 7,58<br><span class="ok">M&aacute;x: R$ 8,50</span></span>
+            </div>
+            <div class="detail-cell">
+              <span class="dc-lbl">Onde comprar</span>
+              <span class="dc-val" style="font-size:12px">Home Broker<br>Todas as plataformas</span>
+            </div>
+          </div>
+          <p class="card-desc">
+            Fundo de receb&iacute;veis imobili&aacute;rios com cart&atilde;o de CRI diversificados. <strong>Isento de IR para pessoa f&iacute;sica</strong> e com pagamento de proventos mensais. Compre at&eacute; o pre&ccedil;o m&aacute;ximo de R$ 8,50 — se estiver acima disso, aguarde.
+          </p>
+          <div class="prog-wrap">
+            <div class="prog-labels"><span>Posi&ccedil;&atilde;o atual: R$ 1.343</span><span>Objetivo: R$ 3.870</span></div>
+            <div class="prog-track"><div class="prog-fill" style="background:var(--green)" data-w="35.5"></div></div>
+            <div class="prog-labels" style="margin-top:5px"><span style="color:var(--green)">P&oacute;s-aporte: R$ 1.366</span><span style="color:var(--muted)">35% do objetivo</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 3: WRLD11 -->
+    <div class="asset-card">
+      <div class="card-header" onclick="toggle(this)">
+        <div class="card-accent ac-purple"></div>
+        <div class="card-header-inner">
+          <div class="card-left">
+            <div class="card-badge">03 &middot; Internacional &middot; ETF Global</div>
+            <div class="card-ticker">WRLD11</div>
+            <div class="card-name">Investo FTSE Global Equities &middot; 4.000+ empresas</div>
+          </div>
+          <div class="card-right">
+            <span class="card-amount-lbl">Comprar</span>
+            <span class="card-amount p">1&nbsp;cota</span>
+            <span class="card-action-tag tag-p">≈ R$ 147,93</span>
+            <span class="chevron">&#9660;</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="detail-grid">
+            <div class="detail-cell">
+              <span class="dc-lbl">Cotas a comprar</span>
+              <span class="dc-val highlight">1 cota</span>
+              <span class="dc-note">Total ≈ R$ 147,93</span>
+            </div>
+            <div class="detail-cell">
+              <span class="dc-lbl">Pre&ccedil;o ref. &middot; m&aacute;ximo</span>
+              <span class="dc-val" style="font-size:13px">Ref: R$ 147,93<br><span class="ok">M&aacute;x: pre&ccedil;o atual</span></span>
+            </div>
+            <div class="detail-cell">
+              <span class="dc-lbl">Onde comprar</span>
+              <span class="dc-val" style="font-size:12px">Home Broker<br>Todas as plataformas</span>
+            </div>
+          </div>
+          <p class="card-desc">
+            ETF que d&aacute; acesso a <strong>mais de 4.000 empresas em 49 pa&iacute;ses</strong> com um &uacute;nico ativo. Gest&atilde;o passiva, diversifica&ccedil;&atilde;o global autom&aacute;tica. Compre ao pre&ccedil;o de mercado — sem limite espec&iacute;fico de pre&ccedil;o m&aacute;ximo.
+          </p>
+          <div class="prog-wrap">
+            <div class="prog-labels"><span>Posi&ccedil;&atilde;o atual: R$ 1.919</span><span>Objetivo: R$ 4.300</span></div>
+            <div class="prog-track"><div class="prog-fill" style="background:var(--purple)" data-w="47.2"></div></div>
+            <div class="prog-labels" style="margin-top:5px"><span style="color:var(--purple)">P&oacute;s-aporte: R$ 2.067</span><span style="color:var(--muted)">48% do objetivo</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /cards -->
+
+  <!-- CHECKLIST -->
+  <div class="chklist">
+    <div class="chk-hd">
+      <span>Marque conforme executa</span>
+      <span class="chk-progress" id="chk-prog">0 / 3 conclu&iacute;dos</span>
+    </div>
+    <div class="chk-i" onclick="toggleChk(this)">
+      <div class="chk-b"></div>
+      <div class="chk-t">Apliquei <strong>R$ 4.829,32 no CDB Daycoval ou BMG</strong> &mdash; taxa m&iacute;nima 104% CDI (Daycoval) ou 107% CDI (BMG)</div>
+    </div>
+    <div class="chk-i" onclick="toggleChk(this)">
+      <div class="chk-b"></div>
+      <div class="chk-t">Comprei <strong>3 cotas de CPTS11</strong> a no m&aacute;ximo R$&nbsp;8,50 por cota &mdash; total ≈ R$&nbsp;22,74</div>
+    </div>
+    <div class="chk-i" onclick="toggleChk(this)">
+      <div class="chk-b"></div>
+      <div class="chk-t">Comprei <strong>1 cota de WRLD11</strong> ao pre&ccedil;o de mercado &mdash; total ≈ R$&nbsp;147,93</div>
+    </div>
+  </div>
+
+  <!-- TOTAL -->
+  <div class="total-blk">
+    <div>
+      <div class="tl-lbl">Total do aporte</div>
+      <div class="tl-val">R$ 4.999,99</div>
+    </div>
+    <div class="tr-col">
+      <div class="trl"><span class="trll">CDB Daycoval / BMG</span><span class="trlv">R$ 4.829,32</span></div>
+      <div class="trl"><span class="trll">CPTS11 &middot; 3 cotas</span><span class="trlv">R$ 22,74</span></div>
+      <div class="trl"><span class="trll">WRLD11 &middot; 1 cota</span><span class="trlv">R$ 147,93</span></div>
+      <div class="tdiv"></div>
+      <div class="trl"><span class="trll g">Total &middot; Sobra R$ 0,01</span><span class="trlv g">R$ 4.999,99</span></div>
+    </div>
+  </div>
+
+  <!-- ALOCAÇÃO PÓS -->
+  <div class="alloc">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+      <span style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);font-weight:400">Aloca&ccedil;&atilde;o p&oacute;s-aporte</span>
+      <div style="flex:1;height:1px;background:var(--line)"></div>
+    </div>
+    <div class="alloc-row">
+      <span class="alloc-lbl">Renda Fixa / Caixa</span>
+      <div class="alloc-track"><div class="alloc-fill" style="background:var(--teal)" data-w="88.9"></div></div>
+      <span class="alloc-pct"><span class="a">66,7%</span> <span class="m">meta 75%</span></span>
+    </div>
+    <div class="alloc-row">
+      <span class="alloc-lbl">Real Estate</span>
+      <div class="alloc-track"><div class="alloc-fill" style="background:var(--green)" data-w="99.7"></div></div>
+      <span class="alloc-pct"><span class="a">15,0%</span> <span class="m">&#10003; ok</span></span>
+    </div>
+    <div class="alloc-row">
+      <span class="alloc-lbl">Internacional</span>
+      <div class="alloc-track"><div class="alloc-fill" style="background:var(--purple)" data-w="100"></div></div>
+      <span class="alloc-pct"><span class="a">5,1%</span> <span class="m">&#10003; ok</span></span>
+    </div>
+    <div class="alloc-row">
+      <span class="alloc-lbl">A&ccedil;&otilde;es</span>
+      <div class="alloc-track"><div class="alloc-fill" style="background:var(--red);opacity:.5" data-w="100"></div></div>
+      <span class="alloc-pct" style="color:var(--red)">8,4% &rarr; meta 5%</span>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div>
+      <div class="sig-n">Matheus Melo</div>
+      <div class="sig-r">Planejador Financeiro Pessoal &middot; Gr&atilde;o | Grupo Primo</div>
+      <div class="sig-c">CFP&reg; &middot; Master Planner</div>
+    </div>
+    <div class="disc">Pre&ccedil;os de refer&ecirc;ncia: Jun 2026. Confirme no Home Broker antes de executar. N&atilde;o constitui oferta de valores mobili&aacute;rios.</div>
+  </footer>
+
+</div>
+
+<script>
+// data
+document.getElementById('doc-date').textContent =
+  new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+
+// expand / collapse
+function toggle(header){
+  header.classList.toggle('open');
+  var body = header.closest('.asset-card').querySelector('.card-body');
+  body.classList.toggle('open');
+  if(body.classList.contains('open')){
+    // trigger progress bars inside
+    body.querySelectorAll('.prog-fill[data-w]').forEach(el=>{
+      setTimeout(()=>{el.style.width=el.dataset.w+'%'},50);
+    });
+  }
+}
+
+// checklist
+function toggleChk(el){
+  el.classList.toggle('done');
+  var done = document.querySelectorAll('.chk-i.done').length;
+  var total = document.querySelectorAll('.chk-i').length;
+  document.getElementById('chk-prog').textContent = done+' / '+total+' concluídos';
+}
+
+// animations after unlock
+function startAnim(){
+  setTimeout(()=>{
+    document.querySelectorAll('.alloc-fill[data-w]').forEach((el,i)=>{
+      setTimeout(()=>{el.style.width=el.dataset.w+'%'},150+i*100);
+    });
+  },300);
+}
+</script>
+</body>
+</html>
